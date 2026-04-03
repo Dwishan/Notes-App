@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../theme/theme_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:minimal_notes_app/core/common/cubits/theme/theme_cubit.dart';
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
@@ -37,14 +37,17 @@ class MyDrawer extends StatelessWidget {
                       color: Theme.of(context).colorScheme.inversePrimary,
                     ),
                   ),
-                  Consumer<ThemeProvider>(
-                    builder: (context, themeProvider, child) => CupertinoSwitch(
-                      value: Provider.of<ThemeProvider>(context).isDarkMode,
-                      onChanged: (value) {
-                        Provider.of<ThemeProvider>(context, listen: false)
-                            .toggleTheme();
-                      },
-                    ),
+                  BlocBuilder<ThemeCubit, ThemeState>(
+                    builder: (context, state) {
+                      final isDark =
+                          state is ThemeLoaded ? state.isDarkMode : false;
+                      return CupertinoSwitch(
+                        value: isDark,
+                        onChanged: (value) {
+                          context.read<ThemeCubit>().toggleTheme();
+                        },
+                      );
+                    },
                   ),
                 ],
               ),

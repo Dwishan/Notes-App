@@ -1,9 +1,9 @@
 import 'package:isar/isar.dart';
 
-part 'note.g.dart';
+part 'isar_note.g.dart';
 
 @Collection()
-class Note {
+class IsarNote {
   Id id = Isar.autoIncrement;
   late String text;
 }

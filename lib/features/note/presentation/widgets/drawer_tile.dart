@@ -10,7 +10,7 @@ class DrawerTile extends StatelessWidget {
     required this.title,
     required this.leading,
     required this.onTap,
-    });
+  });
 
   @override
   Widget build(BuildContext context) {

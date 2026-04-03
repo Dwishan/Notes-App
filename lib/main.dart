@@ -1,18 +1,22 @@
+import 'package:minimal_notes_app/core/common/cubits/theme/theme_cubit.dart';
+import 'package:minimal_notes_app/core/theme/theme.dart';
+import 'package:minimal_notes_app/features/note/presentation/bloc/note_bloc.dart';
+import 'package:minimal_notes_app/features/note/presentation/pages/notes_page.dart';
+import 'package:minimal_notes_app/init_dependencies.dart';
 import 'package:flutter/material.dart';
-import 'package:minimal_notes_app/models/note_database.dart';
-import 'package:minimal_notes_app/theme/theme_provider.dart';
-import 'package:provider/provider.dart';
-import 'pages/notes_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await NoteDatabase.initialize();
-  runApp(MultiProvider(
+  await initDependencies();
+  runApp(MultiBlocProvider(
     providers: [
-      ChangeNotifierProvider(
-        create: (context) => NoteDatabase(),
+      BlocProvider(
+        create: (_) => serviceLocator<ThemeCubit>(),
       ),
-      ChangeNotifierProvider(create: (context) => ThemeProvider()),
+      BlocProvider(
+        create: (_) => serviceLocator<NoteBloc>(),
+      ),
     ],
     child: const MyApp(),
   ));
@@ -23,10 +27,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: const NotesPage(),
-      theme: Provider.of<ThemeProvider>(context).themeData,
+    return BlocBuilder<ThemeCubit, ThemeState>(
+      builder: (context, state) {
+        final themeData = state is ThemeLoaded
+            ? state.themeData
+            : AppTheme.lightThemeMode;
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Minimal Notes',
+          theme: themeData,
+          home: const NotesPage(),
+        );
+      },
     );
   }
 }
