@@ -10,9 +10,15 @@ class NoteRepositoryImpl implements NoteRepository {
   NoteRepositoryImpl(this.noteLocalDataSource);
 
   @override
-  Future<Either<Failure, Note>> addNote({required String text}) async {
+  Future<Either<Failure, Note>> addNote({
+    required String title,
+    String? description,
+  }) async {
     try {
-      final note = await noteLocalDataSource.addNote(text: text);
+      final note = await noteLocalDataSource.addNote(
+        title: title,
+        description: description,
+      );
       return right(note);
     } on ServerException catch (e) {
       return left(Failure(e.message));
@@ -32,18 +38,21 @@ class NoteRepositoryImpl implements NoteRepository {
   @override
   Future<Either<Failure, Note>> updateNote({
     required int id,
-    required String newText,
+    required String newTitle,
+    String? newDescription,
   }) async {
     try {
       final note = await noteLocalDataSource.updateNote(
         id: id,
-        newText: newText,
+        newTitle: newTitle,
+        newDescription: newDescription,
       );
       return right(note);
     } on ServerException catch (e) {
       return left(Failure(e.message));
     }
   }
+
 
   @override
   Future<Either<Failure, Note>> deleteNote({required int id}) async {

@@ -4,9 +4,13 @@ import 'package:minimal_notes_app/features/note/data/models/note_model.dart';
 import 'package:minimal_notes_app/features/note/data/models/isar_note.dart';
 
 abstract interface class NoteLocalDataSource {
-  Future<NoteModel> addNote({required String text});
+  Future<NoteModel> addNote({required String title, String? description});
   Future<List<NoteModel>> getAllNotes();
-  Future<NoteModel> updateNote({required int id, required String newText});
+  Future<NoteModel> updateNote({
+    required int id,
+    required String newTitle,
+    String? newDescription,
+  });
   Future<NoteModel> deleteNote({required int id});
 }
 
@@ -15,13 +19,16 @@ class NoteLocalDataSourceImpl implements NoteLocalDataSource {
   NoteLocalDataSourceImpl(this.isar);
 
   @override
-  Future<NoteModel> addNote({required String text}) async {
+  Future<NoteModel> addNote({required String title, String? description}) async {
     try {
-      final newNote = IsarNote()..text = text;
+      final newNote = IsarNote()
+        ..title = title
+        ..description = description;
       await isar.writeTxn(() => isar.isarNotes.put(newNote));
       return NoteModel(
         id: newNote.id,
-        text: newNote.text,
+        title: newNote.title,
+        description: newNote.description,
       );
     } catch (e) {
       throw ServerException(e.toString());
@@ -36,7 +43,8 @@ class NoteLocalDataSourceImpl implements NoteLocalDataSource {
           .map(
             (note) => NoteModel(
               id: note.id,
-              text: note.text,
+              title: note.title,
+              description: note.description,
             ),
           )
           .toList();
@@ -48,18 +56,21 @@ class NoteLocalDataSourceImpl implements NoteLocalDataSource {
   @override
   Future<NoteModel> updateNote({
     required int id,
-    required String newText,
+    required String newTitle,
+    String? newDescription,
   }) async {
     try {
       final existingNote = await isar.isarNotes.get(id);
       if (existingNote == null) {
         throw ServerException('Note not found');
       }
-      existingNote.text = newText;
+      existingNote.title = newTitle;
+      existingNote.description = newDescription;
       await isar.writeTxn(() => isar.isarNotes.put(existingNote));
       return NoteModel(
         id: existingNote.id,
-        text: existingNote.text,
+        title: existingNote.title,
+        description: existingNote.description,
       );
     } catch (e) {
       throw ServerException(e.toString());
@@ -76,10 +87,12 @@ class NoteLocalDataSourceImpl implements NoteLocalDataSource {
       await isar.writeTxn(() => isar.isarNotes.delete(id));
       return NoteModel(
         id: existingNote.id,
-        text: existingNote.text,
+        title: existingNote.title,
+        description: existingNote.description,
       );
     } catch (e) {
       throw ServerException(e.toString());
     }
   }
 }
+

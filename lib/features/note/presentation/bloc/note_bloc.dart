@@ -50,7 +50,10 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
     Emitter<NoteState> emit,
   ) async {
     final res = await _addNote(
-      AddNoteParams(text: event.text),
+      AddNoteParams(
+        title: event.title,
+        description: event.description,
+      ),
     );
 
     res.fold(
@@ -64,7 +67,11 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
     Emitter<NoteState> emit,
   ) async {
     final res = await _updateNote(
-      UpdateNoteParams(id: event.id, newText: event.newText),
+      UpdateNoteParams(
+        id: event.id,
+        newTitle: event.newTitle,
+        newDescription: event.newDescription,
+      ),
     );
 
     res.fold(

@@ -38,13 +38,14 @@ dependencies:
   isar_flutter_libs: ^3.1.0+1
   path_provider: ^2.1.1
   google_fonts: ^8.0.2
-  popover: ^0.3.1
   shared_preferences: ^2.5.3
 
   # Clean Architecture Dependencies
   flutter_bloc: ^8.1.4
   get_it: ^7.6.7
   fpdart: ^1.1.0
+  shadcn_ui: ^0.53.3
+  flutter_slidable: ^4.0.3
 
 dev_dependencies:
   flutter_test:

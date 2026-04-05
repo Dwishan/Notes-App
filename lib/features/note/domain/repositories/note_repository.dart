@@ -4,17 +4,20 @@ import 'package:fpdart/fpdart.dart';
 
 abstract interface class NoteRepository {
   Future<Either<Failure, Note>> addNote({
-    required String text,
+    required String title,
+    String? description,
   });
 
   Future<Either<Failure, List<Note>>> getAllNotes();
 
   Future<Either<Failure, Note>> updateNote({
     required int id,
-    required String newText,
+    required String newTitle,
+    String? newDescription,
   });
 
   Future<Either<Failure, Note>> deleteNote({
     required int id,
   });
 }
+

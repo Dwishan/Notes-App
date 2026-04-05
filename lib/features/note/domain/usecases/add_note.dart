@@ -11,15 +11,19 @@ class AddNote implements UseCase<Note, AddNoteParams> {
   @override
   Future<Either<Failure, Note>> call(AddNoteParams params) async {
     return await noteRepository.addNote(
-      text: params.text,
+      title: params.title,
+      description: params.description,
     );
   }
 }
 
 class AddNoteParams {
-  final String text;
+  final String title;
+  final String? description;
 
   AddNoteParams({
-    required this.text,
+    required this.title,
+    this.description,
   });
 }
+

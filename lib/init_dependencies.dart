@@ -7,6 +7,7 @@ import 'package:minimal_notes_app/features/note/domain/usecases/delete_note.dart
 import 'package:minimal_notes_app/features/note/domain/usecases/get_all_notes.dart';
 import 'package:minimal_notes_app/features/note/domain/usecases/update_note.dart';
 import 'package:minimal_notes_app/features/note/presentation/bloc/note_bloc.dart';
+import 'package:minimal_notes_app/features/note/presentation/cubit/note_layout_cubit.dart';
 import 'package:minimal_notes_app/features/note/data/models/isar_note.dart';
 import 'package:get_it/get_it.dart';
 import 'package:isar/isar.dart';

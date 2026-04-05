@@ -52,6 +52,10 @@ void _initNote() {
         serviceLocator(),
       ),
     )
+    // Cubit
+    ..registerLazySingleton(
+      () => NoteLayoutCubit(),
+    )
     // Bloc
     ..registerLazySingleton(
       () => NoteBloc(

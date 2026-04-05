@@ -5,5 +5,7 @@ part 'isar_note.g.dart';
 @Collection()
 class IsarNote {
   Id id = Isar.autoIncrement;
-  late String text;
+  late String title;
+  String? description;
 }
+

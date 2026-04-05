@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 
 void showSnackBar(BuildContext context, String content) {
-  ScaffoldMessenger.of(context)
-    ..hideCurrentSnackBar()
-    ..showSnackBar(
-      SnackBar(
-        content: Text(content),
-      ),
-    );
+  ShadToaster.of(context).show(
+    ShadToast(
+      description: Text(content),
+    ),
+  );
 }
+

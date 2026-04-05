@@ -12,17 +12,21 @@ class UpdateNote implements UseCase<Note, UpdateNoteParams> {
   Future<Either<Failure, Note>> call(UpdateNoteParams params) async {
     return await noteRepository.updateNote(
       id: params.id,
-      newText: params.newText,
+      newTitle: params.newTitle,
+      newDescription: params.newDescription,
     );
   }
 }
 
 class UpdateNoteParams {
   final int id;
-  final String newText;
+  final String newTitle;
+  final String? newDescription;
 
   UpdateNoteParams({
     required this.id,
-    required this.newText,
+    required this.newTitle,
+    this.newDescription,
   });
 }
+
