@@ -1,61 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:minimal_notes_app/core/common/cubits/theme/theme_cubit.dart';
-import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:minimal_notes_app/features/settings/presentation/pages/settings_page.dart';
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final theme = ShadTheme.of(context);
-    
+    final theme = Theme.of(context);
+
     return Drawer(
-      backgroundColor: theme.colorScheme.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       child: Column(
         children: [
           DrawerHeader(
             child: Icon(
-              Icons.note_rounded,
+              Icons.sticky_note_2_rounded,
               size: 55,
-              color: theme.colorScheme.foreground,
+              color: theme.colorScheme.primary,
             ),
           ),
           const SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            child: ShadCard(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
-              backgroundColor: theme.colorScheme.secondary,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Theme",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.foreground,
-                    ),
-                  ),
-                  BlocBuilder<ThemeCubit, ThemeState>(
-                    builder: (context, state) {
-                      final isDark =
-                          state is ThemeLoaded ? state.isDarkMode : false;
-                      return ShadSwitch(
-                        value: isDark,
-                        onChanged: (value) {
-                          context.read<ThemeCubit>().toggleTheme();
-                        },
-                      );
-                    },
-                  ),
-                ],
+          ListTile(
+            leading: Icon(
+              Icons.settings_outlined,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+            ),
+            title: Text(
+              'Settings',
+              style: TextStyle(
+                color: theme.colorScheme.onSurface,
+                fontWeight: FontWeight.w500,
               ),
             ),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SettingsPage(),
+                ),
+              );
+            },
           ),
         ],
       ),
     );
   }
 }
-

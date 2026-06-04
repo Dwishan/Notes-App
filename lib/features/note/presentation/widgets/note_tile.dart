@@ -4,24 +4,26 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:minimal_notes_app/features/note/domain/entities/note.dart';
 import 'package:minimal_notes_app/features/note/presentation/bloc/note_bloc.dart';
 import 'package:minimal_notes_app/features/note/presentation/pages/note_edit_page.dart';
-import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:minimal_notes_app/features/note/presentation/widgets/delete_confirmation_dialog.dart';
 
 class NoteTile extends StatelessWidget {
   final Note note;
   final bool isGrid;
+  final bool isCompact;
+
   const NoteTile({
     super.key,
     required this.note,
     this.isGrid = false,
+    this.isCompact = false,
   });
 
   void _onDelete(BuildContext context) {
-    showShadDialog(
+    showDialog(
       context: context,
       builder: (context) => DeleteConfirmationDialog(
-        title: const Text('Delete Note'),
-        description: const Text('Are you sure you want to delete this note?'),
+        title: 'Delete Note',
+        description: 'Are you sure you want to delete this note? This action cannot be undone.',
         onConfirm: () {
           context.read<NoteBloc>().add(NoteDelete(id: note.id));
         },
@@ -31,7 +33,8 @@ class NoteTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ShadTheme.of(context);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     Widget cardChild = GestureDetector(
       onTap: () {
@@ -43,33 +46,46 @@ class NoteTile extends StatelessWidget {
         );
       },
       onLongPress: isGrid ? () => _onDelete(context) : null,
-      child: ShadCard(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        backgroundColor: theme.colorScheme.secondary,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: EdgeInsets.all(isCompact ? 12 : 16),
+        decoration: BoxDecoration(
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.05)
+              : Colors.black.withValues(alpha: 0.03),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.08)
+                : Colors.black.withValues(alpha: 0.06),
+            width: 1,
+          ),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
               note.title,
-              style: TextStyle(
-                color: theme.colorScheme.foreground,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
+              style: theme.textTheme.titleSmall?.copyWith(
+                color: theme.colorScheme.onSurface,
+                fontWeight: FontWeight.w600,
               ),
               maxLines: isGrid ? 2 : 1,
               overflow: TextOverflow.ellipsis,
             ),
             if (note.description != null && note.description!.isNotEmpty) ...[
-              const SizedBox(height: 4),
+              SizedBox(height: isCompact ? 4 : 8),
               Expanded(
                 flex: isGrid ? 1 : 0,
                 child: Text(
                   note.description!,
-                  style: TextStyle(
-                    color: theme.colorScheme.foreground.withValues(alpha: 0.7),
-                    fontSize: 14,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
+                    height: 1.4,
                   ),
-                  maxLines: isGrid ? 4 : 2,
+                  maxLines: isGrid
+                      ? (isCompact ? 2 : 4)
+                      : (isCompact ? 1 : 2),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -80,14 +96,11 @@ class NoteTile extends StatelessWidget {
     );
 
     if (isGrid) {
-      return Padding(
-        padding: const EdgeInsets.only(top: 10),
-        child: cardChild,
-      );
+      return cardChild;
     }
 
     return Padding(
-      padding: const EdgeInsets.only(top: 10, left: 25, right: 25),
+      padding: EdgeInsets.only(bottom: isCompact ? 8 : 12),
       child: Slidable(
         key: ValueKey(note.id),
         endActionPane: ActionPane(
@@ -95,10 +108,10 @@ class NoteTile extends StatelessWidget {
           children: [
             SlidableAction(
               onPressed: _onDelete,
-              backgroundColor: theme.colorScheme.destructive,
-              foregroundColor: theme.colorScheme.destructiveForeground,
+              backgroundColor: theme.colorScheme.error,
+              foregroundColor: theme.colorScheme.onError,
               icon: Icons.delete_outline_rounded,
-              borderRadius: const BorderRadius.all(Radius.circular(8)),
+              borderRadius: const BorderRadius.all(Radius.circular(16)),
             ),
           ],
         ),

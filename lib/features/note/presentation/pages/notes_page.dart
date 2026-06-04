@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:forui/forui.dart';
+import 'package:minimal_notes_app/core/common/cubits/settings/settings_cubit.dart';
 import 'package:minimal_notes_app/core/common/widgets/loader.dart';
 import 'package:minimal_notes_app/core/utils/show_snackbar.dart';
-import 'package:minimal_notes_app/core/common/cubits/theme/theme_cubit.dart';
 import 'package:minimal_notes_app/features/note/presentation/bloc/note_bloc.dart';
-import 'package:minimal_notes_app/features/note/presentation/cubit/note_layout_cubit.dart';
 import 'package:minimal_notes_app/features/note/presentation/pages/note_add_page.dart';
 import 'package:minimal_notes_app/features/note/presentation/widgets/note_tile.dart';
-import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:minimal_notes_app/features/settings/presentation/pages/settings_page.dart';
 
 class NotesPage extends StatefulWidget {
   const NotesPage({super.key});
@@ -27,98 +25,49 @@ class _NotesPageState extends State<NotesPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ShadTheme.of(context);
+    final theme = Theme.of(context);
 
-    return BlocBuilder<ThemeCubit, ThemeState>(
-      builder: (context, themeState) {
-        final isDark = themeState is ThemeLoaded ? themeState.isDarkMode : false;
-
-        return Scaffold(
-          appBar: AppBar(
-            elevation: 0,
-            scrolledUnderElevation: 0,
-            shadowColor: Colors.transparent,
-            backgroundColor: Colors.transparent,
-            foregroundColor: theme.colorScheme.foreground,
-            systemOverlayStyle:
-                isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
+    return BlocBuilder<SettingsCubit, SettingsState>(
+      builder: (context, settings) {
+        return FScaffold(
+          childPad: false,
+          header: FHeader(
             title: Text(
               'Notes',
-              style: GoogleFonts.dmSerifText(
-                fontSize: 32,
-                color: theme.colorScheme.foreground,
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: theme.colorScheme.onSurface,
               ),
             ),
-            actions: [
-              // Layout Toggle
-              BlocBuilder<NoteLayoutCubit, NoteLayout>(
-                builder: (context, layout) {
-                  return ShadButton.ghost(
-                    width: 40,
-                    height: 40,
-                    padding: EdgeInsets.zero,
-                    onPressed: () =>
-                        context.read<NoteLayoutCubit>().toggleLayout(),
-                    child: Icon(
-                      layout == NoteLayout.list
-                          ? LucideIcons.layoutGrid
-                          : LucideIcons.list,
-                      size: 20,
-                      color: theme.colorScheme.foreground,
+            suffixes: [
+              FHeaderAction(
+                icon: const Icon(Icons.settings_outlined, size: 20),
+                onPress: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SettingsPage(),
                     ),
                   );
                 },
               ),
-              const SizedBox(width: 8),
-              // Theme Toggle Icons/Switch
-              Row(
-                children: [
-                  Icon(
-                    isDark ? LucideIcons.moon : LucideIcons.sun,
-                    size: 20,
-                    color: theme.colorScheme.foreground.withValues(alpha: 0.7),
-                  ),
-                  const SizedBox(width: 8),
-                  ShadSwitch(
-                    value: isDark,
-                    onChanged: (value) {
-                      context.read<ThemeCubit>().toggleTheme();
-                    },
-                  ),
-                ],
+              FHeaderAction(
+                icon: const Icon(Icons.add_rounded, size: 20),
+                onPress: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const NoteAddPage(),
+                    ),
+                  );
+                },
               ),
-              const SizedBox(width: 16),
             ],
           ),
-          backgroundColor: theme.colorScheme.background,
-          floatingActionButton: ShadButton.ghost(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const NoteAddPage(),
-                ),
-              );
-            },
-            decoration: ShadDecoration(
-              border: ShadBorder.all(
-                color: theme.colorScheme.border,
-                width: 1,
-              ),
-              color: theme.colorScheme.secondary,
-              shape: BoxShape.circle,
-            ),
-            height: 56,
-            width: 56,
-            child: Icon(
-              Icons.add,
-              color: theme.colorScheme.foreground,
-            ),
-          ),
-          body: Column(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 10),
+              const SizedBox(height: 4),
               Expanded(
                 child: BlocConsumer<NoteBloc, NoteState>(
                   listener: (context, state) {
@@ -137,46 +86,79 @@ class _NotesPageState extends State<NotesPage> {
                       final currentNotes = state.notes;
                       if (currentNotes.isEmpty) {
                         return Center(
-                          child: Text(
-                            'No notes yet...',
-                            style: TextStyle(
-                              color: theme.colorScheme.foreground,
-                            ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.note_add_outlined,
+                                size: 64,
+                                color: theme.colorScheme.onSurface.withValues(alpha: 0.15),
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                'No notes yet',
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                'Tap + to create your first note',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                                ),
+                              ),
+                            ],
                           ),
                         );
                       }
-                      return BlocBuilder<NoteLayoutCubit, NoteLayout>(
-                        builder: (context, layout) {
-                          if (layout == NoteLayout.grid) {
-                            return GridView.builder(
-                              padding: const EdgeInsets.symmetric(horizontal: 15),
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 10,
-                                mainAxisSpacing: 0,
-                                childAspectRatio: 1.0,
-                              ),
-                              itemCount: currentNotes.length,
-                              itemBuilder: (context, index) {
-                                final note = currentNotes[index];
-                                return NoteTile(
-                                  note: note,
-                                  isGrid: true,
-                                );
-                              },
+
+                      // Sort notes
+                      final sortedNotes = List.of(currentNotes);
+                      switch (settings.sortOrder) {
+                        case NoteSortOrder.newestFirst:
+                          sortedNotes.sort((a, b) => b.id.compareTo(a.id));
+                          break;
+                        case NoteSortOrder.oldestFirst:
+                          sortedNotes.sort((a, b) => a.id.compareTo(b.id));
+                          break;
+                        case NoteSortOrder.alphabetical:
+                          sortedNotes.sort((a, b) =>
+                              a.title.toLowerCase().compareTo(b.title.toLowerCase()));
+                          break;
+                      }
+
+                      if (settings.noteLayout == NoteLayout.grid) {
+                        return GridView.builder(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 4,
+                          ),
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12,
+                            childAspectRatio: settings.compactCards ? 1.3 : 1.0,
+                          ),
+                          itemCount: sortedNotes.length,
+                          itemBuilder: (context, index) {
+                            return NoteTile(
+                              note: sortedNotes[index],
+                              isGrid: true,
+                              isCompact: settings.compactCards,
                             );
-                          }
-                          return ListView.builder(
-                            padding: const EdgeInsets.symmetric(horizontal: 0),
-                            itemCount: currentNotes.length,
-                            itemBuilder: (context, index) {
-                              final note = currentNotes[index];
-                              return NoteTile(
-                                note: note,
-                                isGrid: false,
-                              );
-                            },
+                          },
+                        );
+                      }
+                      return ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                        itemCount: sortedNotes.length,
+                        itemBuilder: (context, index) {
+                          return NoteTile(
+                            note: sortedNotes[index],
+                            isGrid: false,
+                            isCompact: settings.compactCards,
                           );
                         },
                       );

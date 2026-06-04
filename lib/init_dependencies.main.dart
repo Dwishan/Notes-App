@@ -13,7 +13,7 @@ Future<void> initDependencies() async {
 
   // Core
   serviceLocator.registerLazySingleton(
-    () => ThemeCubit(),
+    () => SettingsCubit(),
   );
 }
 
@@ -51,10 +51,6 @@ void _initNote() {
       () => DeleteNote(
         serviceLocator(),
       ),
-    )
-    // Cubit
-    ..registerLazySingleton(
-      () => NoteLayoutCubit(),
     )
     // Bloc
     ..registerLazySingleton(
