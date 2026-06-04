@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
+import 'package:flutter_lucide/flutter_lucide.dart';
 
 class DeleteConfirmationDialog extends StatelessWidget {
   final String title;
@@ -42,7 +43,7 @@ class DeleteConfirmationDialog extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
-                Icons.warning_amber_rounded,
+                LucideIcons.triangle_alert,
                 color: theme.colorScheme.error,
                 size: 24,
               ),

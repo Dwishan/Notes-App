@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forui/forui.dart';
+import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:minimal_notes_app/core/common/cubits/settings/settings_cubit.dart';
 import 'package:minimal_notes_app/core/theme/app_pallete.dart';
 import 'package:minimal_notes_app/core/theme/theme.dart';
@@ -19,9 +20,9 @@ class SettingsPage extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: Icon(
-            Icons.arrow_back_ios_new_rounded,
+            LucideIcons.chevron_left,
             color: theme.colorScheme.onSurface,
-            size: 20,
+            size: 22,
           ),
           onPressed: () => Navigator.pop(context),
         ),
@@ -93,7 +94,7 @@ class SettingsPage extends StatelessWidget {
                               label: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.light_mode_rounded, size: 16),
+                                  Icon(LucideIcons.sun, size: 16),
                                   SizedBox(width: 6),
                                   Text('Light'),
                                 ],
@@ -104,7 +105,7 @@ class SettingsPage extends StatelessWidget {
                               label: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.dark_mode_rounded, size: 16),
+                                  Icon(LucideIcons.moon, size: 16),
                                   SizedBox(width: 6),
                                   Text('Dark'),
                                 ],
@@ -115,7 +116,7 @@ class SettingsPage extends StatelessWidget {
                               label: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.settings_brightness_rounded,
+                                  Icon(LucideIcons.monitor,
                                       size: 16),
                                   SizedBox(width: 6),
                                   Text('System'),
@@ -188,7 +189,7 @@ class SettingsPage extends StatelessWidget {
                                       : null,
                                 ),
                                 child: isSelected
-                                    ? const Icon(Icons.check_rounded,
+                                    ? const Icon(LucideIcons.check,
                                         color: Colors.white, size: 20)
                                     : null,
                               ),
@@ -488,7 +489,7 @@ class SettingsPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(
-                        Icons.sticky_note_2_rounded,
+                        LucideIcons.sticky_note,
                         color: theme.colorScheme.primary,
                         size: 24,
                       ),
@@ -579,13 +580,13 @@ class _LayoutToggle extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           _LayoutToggleButton(
-            icon: Icons.view_list_rounded,
+            icon: LucideIcons.list,
             isSelected: !isGrid,
             onTap: () => onChanged(false),
             isLeft: true,
           ),
           _LayoutToggleButton(
-            icon: Icons.grid_view_rounded,
+            icon: LucideIcons.layout_grid,
             isSelected: isGrid,
             onTap: () => onChanged(true),
             isLeft: false,

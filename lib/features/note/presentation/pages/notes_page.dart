@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forui/forui.dart';
+import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:minimal_notes_app/core/common/cubits/settings/settings_cubit.dart';
 import 'package:minimal_notes_app/core/common/widgets/loader.dart';
 import 'package:minimal_notes_app/core/utils/show_snackbar.dart';
@@ -41,7 +42,7 @@ class _NotesPageState extends State<NotesPage> {
             ),
             suffixes: [
               FHeaderAction(
-                icon: const Icon(Icons.settings_outlined, size: 20),
+                icon: const Icon(LucideIcons.settings, size: 20),
                 onPress: () {
                   Navigator.push(
                     context,
@@ -52,7 +53,7 @@ class _NotesPageState extends State<NotesPage> {
                 },
               ),
               FHeaderAction(
-                icon: const Icon(Icons.add_rounded, size: 20),
+                icon: const Icon(LucideIcons.plus, size: 20),
                 onPress: () {
                   Navigator.push(
                     context,
@@ -89,8 +90,8 @@ class _NotesPageState extends State<NotesPage> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
-                                Icons.note_add_outlined,
+                               Icon(
+                                LucideIcons.file_plus,
                                 size: 64,
                                 color: theme.colorScheme.onSurface.withValues(alpha: 0.15),
                               ),

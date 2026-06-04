@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:minimal_notes_app/features/note/domain/entities/note.dart';
 import 'package:minimal_notes_app/features/note/presentation/bloc/note_bloc.dart';
 import 'package:minimal_notes_app/features/note/presentation/pages/note_edit_page.dart';
@@ -29,6 +30,17 @@ class NoteTile extends StatelessWidget {
         },
       ),
     );
+  }
+
+  String _formattedDescription(String desc) {
+    if (desc.contains('- [ ]') || desc.contains('- [x]') || desc.contains('[ ]') || desc.contains('[x]')) {
+      return desc
+          .replaceAll('- [ ]', '☐')
+          .replaceAll('- [x]', '☑')
+          .replaceAll('[ ]', '☐')
+          .replaceAll('[x]', '☑');
+    }
+    return desc;
   }
 
   @override
@@ -78,7 +90,7 @@ class NoteTile extends StatelessWidget {
               Expanded(
                 flex: isGrid ? 1 : 0,
                 child: Text(
-                  note.description!,
+                  _formattedDescription(note.description!),
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
                     height: 1.4,
@@ -110,7 +122,7 @@ class NoteTile extends StatelessWidget {
               onPressed: _onDelete,
               backgroundColor: theme.colorScheme.error,
               foregroundColor: theme.colorScheme.onError,
-              icon: Icons.delete_outline_rounded,
+              icon: LucideIcons.trash_2,
               borderRadius: const BorderRadius.all(Radius.circular(16)),
             ),
           ],
