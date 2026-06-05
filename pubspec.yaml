@@ -11,6 +11,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
   cupertino_icons: ^1.0.2
   isar: ^3.1.0+1
@@ -25,6 +27,7 @@ dependencies:
   equatable: ^2.0.7
   flutter_slidable: ^4.0.3
   flutter_lucide: ^1.11.0
+  flutter_quill: ^11.5.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

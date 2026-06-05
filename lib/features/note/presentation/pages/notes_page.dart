@@ -8,7 +8,9 @@ import 'package:minimal_notes_app/core/utils/show_snackbar.dart';
 import 'package:minimal_notes_app/features/note/presentation/bloc/note_bloc.dart';
 import 'package:minimal_notes_app/features/note/presentation/pages/note_add_page.dart';
 import 'package:minimal_notes_app/features/note/presentation/widgets/note_tile.dart';
+import 'package:minimal_notes_app/features/note/presentation/widgets/add_note_fab.dart';
 import 'package:minimal_notes_app/features/settings/presentation/pages/settings_page.dart';
+import 'package:minimal_notes_app/core/constants/app_strings.dart';
 
 class NotesPage extends StatefulWidget {
   const NotesPage({super.key});
@@ -30,46 +32,37 @@ class _NotesPageState extends State<NotesPage> {
 
     return BlocBuilder<SettingsCubit, SettingsState>(
       builder: (context, settings) {
-        return FScaffold(
-          childPad: false,
-          header: FHeader(
-            title: Text(
-              'Notes',
-              style: theme.textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.onSurface,
-              ),
-            ),
-            suffixes: [
-              FHeaderAction(
-                icon: const Icon(LucideIcons.settings, size: 20),
-                onPress: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SettingsPage(),
+        return Scaffold(
+          backgroundColor: theme.scaffoldBackgroundColor,
+          extendBodyBehindAppBar: false,
+          body: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FHeader(
+                  title: Text(
+                    AppStrings.appName,
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onSurface,
                     ),
-                  );
-                },
-              ),
-              FHeaderAction(
-                icon: const Icon(LucideIcons.plus, size: 20),
-                onPress: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const NoteAddPage(),
+                  ),
+                  suffixes: [
+                    FHeaderAction(
+                      icon: const Icon(LucideIcons.settings, size: 20),
+                      onPress: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SettingsPage(),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 4),
-              Expanded(
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Expanded(
                 child: BlocConsumer<NoteBloc, NoteState>(
                   listener: (context, state) {
                     if (state is NoteFailure) {
@@ -97,7 +90,7 @@ class _NotesPageState extends State<NotesPage> {
                               ),
                               const SizedBox(height: 16),
                               Text(
-                                'No notes yet',
+                                AppStrings.noNotesYet,
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
                                   fontWeight: FontWeight.w500,
@@ -105,7 +98,7 @@ class _NotesPageState extends State<NotesPage> {
                               ),
                               const SizedBox(height: 6),
                               Text(
-                                'Tap + to create your first note',
+                                AppStrings.createFirstNoteHint,
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
                                 ),
@@ -164,11 +157,22 @@ class _NotesPageState extends State<NotesPage> {
                         },
                       );
                     }
-                    return const SizedBox();
-                  },
+                      return const SizedBox();
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
+          ),
+          floatingActionButton: AddNoteFAB(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const NoteAddPage(),
+                ),
+              );
+            },
           ),
         );
       },

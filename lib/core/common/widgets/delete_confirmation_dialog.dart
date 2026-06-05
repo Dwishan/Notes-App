@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:minimal_notes_app/core/constants/app_strings.dart';
 
 class DeleteConfirmationDialog extends StatelessWidget {
   final String title;
@@ -15,7 +16,7 @@ class DeleteConfirmationDialog extends StatelessWidget {
     required this.description,
     required this.onConfirm,
     this.onCancel,
-    this.actionLabel = 'Delete',
+    this.actionLabel = AppStrings.delete,
   });
 
   @override
@@ -74,7 +75,7 @@ class DeleteConfirmationDialog extends StatelessWidget {
                       if (onCancel != null) onCancel!();
                       Navigator.of(context).pop(false);
                     },
-                    child: const Text('Cancel'),
+                    child: const Text(AppStrings.cancel),
                   ),
                 ),
                 const SizedBox(width: 12),

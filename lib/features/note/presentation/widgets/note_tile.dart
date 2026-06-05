@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:minimal_notes_app/core/utils/note_utils.dart';
 import 'package:minimal_notes_app/features/note/domain/entities/note.dart';
 import 'package:minimal_notes_app/features/note/presentation/bloc/note_bloc.dart';
 import 'package:minimal_notes_app/features/note/presentation/pages/note_edit_page.dart';
-import 'package:minimal_notes_app/features/note/presentation/widgets/delete_confirmation_dialog.dart';
+import 'package:minimal_notes_app/core/common/widgets/delete_confirmation_dialog.dart';
+import 'package:minimal_notes_app/core/constants/app_strings.dart';
 
 class NoteTile extends StatelessWidget {
   final Note note;
@@ -23,8 +25,8 @@ class NoteTile extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => DeleteConfirmationDialog(
-        title: 'Delete Note',
-        description: 'Are you sure you want to delete this note? This action cannot be undone.',
+        title: AppStrings.deleteNoteTitle,
+        description: AppStrings.deleteNoteDescription,
         onConfirm: () {
           context.read<NoteBloc>().add(NoteDelete(id: note.id));
         },
@@ -33,14 +35,15 @@ class NoteTile extends StatelessWidget {
   }
 
   String _formattedDescription(String desc) {
-    if (desc.contains('- [ ]') || desc.contains('- [x]') || desc.contains('[ ]') || desc.contains('[x]')) {
-      return desc
+    final plainText = getPlainTextFromDelta(desc);
+    if (plainText.contains('- [ ]') || plainText.contains('- [x]') || plainText.contains('[ ]') || plainText.contains('[x]')) {
+      return plainText
           .replaceAll('- [ ]', '☐')
           .replaceAll('- [x]', '☑')
           .replaceAll('[ ]', '☐')
           .replaceAll('[x]', '☑');
     }
-    return desc;
+    return plainText;
   }
 
   @override
